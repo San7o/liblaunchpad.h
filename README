@@ -1,0 +1,76 @@
+liblaunchpad.h
+==============
+
+An abstraction layer over the Launchpad S through ALSA, as an
+header-only C99 library.
+
+Author:  Giovanni Santini
+Mail:    giovanni.santini@proton.me
+Github:  @San7o
+
+
+Overview
+========
+
+The Launchpad S is an USB device that can be controlled via MIDI
+1.0, you operating is doing the heavy work for us so we can use its
+audio api to send / read bytes through MIDI. This library provides
+an abstraction layer to control the device more easily, using
+libasound for the communication.
+
+Indexing
+--------
+
+The buttons ("notes") on the Launchpad S are indexed like this:
+
+              |------------------------------|
+              | A0 A1 A2 A3 A4 A5 A6 A7      |
+              |  0  1  2  3  4  5  6  7    8 |
+              | 16 17 18 19 20 21 22 23   24 |
+              | 32  .  .  .  .  .  .  .   40 |
+              | 48  .  .  .  .  .  .  .   56 |
+              | 64  .  .  .  .  .  .  .   72 |
+              | 80  .  .  .  .  .  .  .   88 |
+              | 96  .  .  .  .  .  .  .  104 |
+              | 112 .  .  .  .  .  .  .  120 |
+              |------------------------------|
+
+The top row is a special row that is referred to as Automap / Live.
+In this library it will be referred to only as "Automap".  All the
+other notes are in a grid, where each row starts with a multiple
+of 16 and is 9 notes long. In this library you can index the grid
+by rows and columns from 0 to 7, which is nicer, using `lp_set_note`
+or `lp_set_notes`. Notes can either be on or off, with a color value.
+
+Colors
+------
+
+Each note can have either a low, medium, full or no intensity for
+green and red colors. By mixing green and red you get yellow or
+amber. These are the only colors you can get on the Launchpad S.
+Additionally, you can specify some flags for advanced handling of
+colors when double buffering, and for flashing. This library
+provides some macros to create colors, and some default colors.
+
+Double buffering
+----------------
+
+The Launchpad S supports two buffers, 0 and 1. One is used for
+drawing and the other for updating; when the Launchpad's notes need
+to be updated, the buffers can be swapped. This is a performance
+improvement that is commonly seen videogames. This library provides
+the function `lp_swap_buffers` to, guess what, swap the buffers.
+
+Input
+-----
+
+When a note is pressed or release, the Launchpad will send some
+bytes with the index of the note and a velocity to be used to
+distinguish if the button was pressed or released. This library
+provides an event api where you can read events, either in a
+blocking or non-blocking way (specified during initialization),
+with the `lp_check_event` and then inspecting the `LPEvent` struct.
+
+Full reference:
+
+    https://leemans.ch/latex/doc_launchpad-programmers-reference.pdf
