@@ -44,9 +44,9 @@
 // Overview
 // ========
 //
-// The Launchpad S is an USB device that can be controlled via MIDI
-// 1.0, you operating is doing the heavy work for us so we can use its
-// audio api to send / read bytes through MIDI. This library provides
+// The Launchpad S is an USB device that can be controlled via MIDI 1.0,
+// you operating system is doing the heavy work for you so you can use
+// its audio api to send / read bytes through MIDI. This library provides
 // an abstraction layer to control the device more easily, using
 // libasound for the communication.
 //
@@ -71,8 +71,8 @@
 // In this library it will be referred to only as "Automap".  All the
 // other notes are in a grid, where each row starts with a multiple
 // of 16 and is 9 notes long. In this library you can index the grid
-// by rows and columns from 0 to 7, which is nicer, using `lp_set_note`
-// or `lp_set_notes`. Notes can either be on or off, with a color value.
+// by rows and columns from 0 to 8, which is nicer, using `lp_set_note`
+// or `lp_set_notes`. Notes can either be ON or OFF, with a color value.
 //
 // Colors
 // ------
@@ -96,16 +96,19 @@
 // Input
 // -----
 //
-// When a note is pressed or release, the Launchpad will send some
-// bytes with the index of the note and a velocity to be used to
+// When a note is pressed or released, the Launchpad will send some
+// bytes with the index of the note and a velocity used to
 // distinguish if the button was pressed or released. This library
 // provides an event api where you can read events, either in a
 // blocking or non-blocking way (specified during initialization),
 // with the `lp_check_event` and then inspecting the `LPEvent` struct.
 //
+// Functions and types are documented, so you can understand how to use
+// the library.
+//
 // Full reference:
 //
-//    https://leemans.ch/latex/doc_launchpad-programmers-reference.pdf
+//   https://leemans.ch/latex/doc_launchpad-programmers-reference.pdf
 //
 //
 // Usage
@@ -290,6 +293,7 @@ typedef struct {
 // Open a device with name [devicename]
 // If [nonblocking] is set to true, reading events will be non-blocking.
 // Returns either LP_OK or a negative LP_ERROR.
+// Note: Remember to call `lp_close` when you are done.
 int lp_open(LP *lp, char* devicename, bool nonblocking);
 
 // Reset all the notes in the Launchpad, turning the lights off
