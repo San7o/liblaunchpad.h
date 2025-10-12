@@ -1,7 +1,7 @@
 liblaunchpad.h
 ==============
 
-An abstraction layer over the Launchpad S through ALSA, as an
+An abstraction layer over Novation's Launchpad S through ALSA, as an
 header-only C99 library.
 
 Author:  Giovanni Santini
