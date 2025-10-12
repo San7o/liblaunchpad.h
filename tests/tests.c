@@ -6,7 +6,7 @@
 #define MICRO_TESTS_IMPLEMENTATION
 #include "micro-tests.h"
 
-#define LAUNCHPAD_IMPLEMENTATION
+#define LIBLAUNCHPAD_IMPLEMENTATION
 #include "../liblaunchpad.h"
 
 #define LP_DEVICENAME "hw:1,0,0"

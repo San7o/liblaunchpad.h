@@ -29,10 +29,10 @@ debug: CFLAGS += $(DEBUG_FLAGS)
 debug: $(OUT_NAME)
 
 check: test
-
-test: $(TEST_NAME)
 	chmod +x $(TEST_NAME)
 	./$(TEST_NAME)
+
+test: $(TEST_NAME)
 
 run: $(OUT_NAME)
 	chmod +x $(OUT_NAME)

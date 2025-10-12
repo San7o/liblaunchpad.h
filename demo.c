@@ -1,11 +1,24 @@
+//////////////////////////////////////////////////////////////////////
 // SPDX-License-Identifier: MIT
+//
+// demo.c
+// ======
+//
+// This demo is a tiny speed game, similarly to osu!, where you need
+// to click notes when they appear during a hit window before the next
+// note appears. As the game progresses, it becomes faster and faster
+// and the hit windows become narrower. The game ends if you do not
+// click a note in time, or you click the wrong note (any note that is
+// off).
+//
 // Author:  Giovanni Santini
 // Mail:    giovanni.santini@proton.me
 // Github:  @San7o
+//
 
 #define _POSIX_C_SOURCE 199309L
 
-#define LAUNCHPAD_IMPLEMENTATION
+#define LIBLAUNCHPAD_IMPLEMENTATION
 #include "liblaunchpad.h"
 
 #define MINIAUDIO_IMPLEMENTATION
@@ -104,7 +117,6 @@ int main(void)
     continue;
 
   lost:
-    printf("You lost!\n");
     loop = false;
     continue;
   }

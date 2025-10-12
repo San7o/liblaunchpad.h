@@ -4,12 +4,41 @@
 // liblaunchpad.h
 // ==============
 //
-// An abstraction layer over the Launchpad S through ALSA, as an
+// An abstraction layer over Novation's Launchpad S through ALSA, as an
 // header-only C99 library.
 //
 // Author:  Giovanni Santini
 // Mail:    giovanni.santini@proton.me
 // Github:  @San7o
+//
+//
+// Example
+// =======
+//
+// ```
+// #define LIBLAUNCHPAD_IMPLEMENTATION
+// #include "liblaunchpad.h"
+//
+// #define LP_DEVICENAME "hw:1,0,0"
+//
+// int main(void)
+// {
+//   LP lp;
+//   lp_open(&lp, LP_DEVICENAME, true);
+//
+//   // Turn on note 0,0 with color red
+//   lp_set_note(&lp, LP_NOTE(LP_NOTE_ON, LP_KEY(0,0), LP_COLOR_RED_FULL));
+//   // Turn on note 0,3 with color green
+//   lp_set_note(&lp, LP_NOTE(LP_NOTE_ON, LP_KEY(0,3), LP_COLOR_GREEN_FULL));
+//
+//   sleep(1);
+// 
+//   // Cleanup
+//   lp_reset(&lp);
+//   lp_close(&lp);
+//   return 0;
+// }
+// ```
 //
 //
 // Overview
@@ -76,8 +105,42 @@
 //
 // Full reference:
 //
-//     https://leemans.ch/latex/doc_launchpad-programmers-reference.pdf
+//    https://leemans.ch/latex/doc_launchpad-programmers-reference.pdf
 //
+//
+// Usage
+// =====
+//
+// Do this:
+//
+//   #define LIBLAUNCHPAD_IMPLEMENTATION
+//
+// before you include this file in *one* C or C++ file to create the
+// implementation.
+//
+// i.e. it should look like this:
+//
+//   #include ...
+//   #include ...
+//   #include ...
+//   #define LIBLAUNCHPAD_IMPLEMENTATION
+//   #include "liblaunchpad.h"
+//
+//
+// Code
+// ====
+//
+// The official git repository of liblaunchpad.h is hosted at:
+//
+//     https://github.com/San7o/liblaunchpad.h
+//
+// If you liked this library, you may find useful a bigger collection
+// of header-only C99 libraries called "micro-headers", contributions
+// are welcome:
+//
+//     https://github.com/San7o/micro-headers
+//
+
 
 #ifndef _LIBLAUNCHPAD_H_
 #define _LIBLAUNCHPAD_H_
@@ -270,7 +333,7 @@ int lp_disable_flashing(LP *lp);
 // Implementation
 //
 
-#ifdef LAUNCHPAD_IMPLEMENTATION
+#ifdef LIBLAUNCHPAD_IMPLEMENTATION
 
 int lp_open(LP *lp, char *devicename, bool nonblocking)
 {
@@ -449,7 +512,7 @@ int lp_disable_flashing(LP *lp)
   return LP_OK;
 }
   
-#endif // LAUNCHPAD_IMPLEMENTATION
+#endif // LIBLAUNCHPAD_IMPLEMENTATION
 
 #ifdef __cplusplus
 }
