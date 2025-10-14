@@ -6,11 +6,11 @@
 #
 # Compiler files
 #
-CFLAGS      = -Wall -Werror -Wpedantic -std=c99
-DEBUG_FLAGS = -ggdb
-LDFLAGS     = -lasound -lm
+CFLAGS       = -Wall -Werror -Wpedantic -std=c99
+DEBUG_FLAGS  = -ggdb
+LDFLAGS      = -lasound -lm
 TEST_LDFLAGS = -Wl,-T,tests/micro-tests.ld
-CC?         = gcc
+CC?          = gcc
 
 #
 # Project files

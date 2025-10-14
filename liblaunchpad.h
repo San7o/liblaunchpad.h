@@ -145,8 +145,8 @@
 //
 
 
-#ifndef _LIBLAUNCHPAD_H_
-#define _LIBLAUNCHPAD_H_
+#ifndef LIBLAUNCHPAD
+#define LIBLAUNCHPAD
 
 #define LIBLAUNCHPAD_MAJOR 0
 #define LIBLAUNCHPAD_MINOR 1
@@ -155,6 +155,13 @@
 extern "C" {
 #endif
 
+// Config: Prefix for all functions
+// For function inlining, set this to `static inline` and then define
+// the implementation in all the files
+#ifndef LIBLAUNCHPAD_DEF
+  #define LIBLAUNCHPAD_DEF extern
+#endif
+  
 #include <alsa/asoundlib.h>
 #include <stdbool.h>
 
@@ -294,30 +301,31 @@ typedef struct {
 // If [nonblocking] is set to true, reading events will be non-blocking.
 // Returns either LP_OK or a negative LP_ERROR.
 // Note: Remember to call `lp_close` when you are done.
-int lp_open(LP *lp, char* devicename, bool nonblocking);
+LIBLAUNCHPAD_DEF int lp_open(LP *lp, char* devicename, bool nonblocking);
 
 // Reset all the notes in the Launchpad, turning the lights off
 // Returns either LP_OK or a negative LP_ERROR.
-int lp_reset(LP *lp);
+LIBLAUNCHPAD_DEF int lp_reset(LP *lp);
 
 // Closes communication with the Launchpad
 // Returns either LP_OK or a negative LP_ERROR.
-int lp_close(LP *lp);
+LIBLAUNCHPAD_DEF int lp_close(LP *lp);
 
 // Set a note on the device with the specified [note]
 // Returns either LP_OK or a negative LP_ERROR.
-int lp_set_note(LP *lp, LPNote note);
+LIBLAUNCHPAD_DEF int lp_set_note(LP *lp, LPNote note);
 
 // Set the 8x8 grid on the device with [notes] array
 // Returns either LP_OK or a negative LP_ERROR.
-int lp_set_notes(LP *lp, LPNote notes[LP_ROWS * LP_COLS]);
+LIBLAUNCHPAD_DEF int lp_set_notes(LP *lp, LPNote notes[LP_ROWS * LP_COLS]);
 
 // Low level control over double buffering, set [flags] on the device
 // Returns either LP_OK or a negative LP_ERROR.
-int lp_set_double_buffering_flags(LP *lp, LPDoubleBufferingFlag flags);
+LIBLAUNCHPAD_DEF int
+lp_set_double_buffering_flags(LP *lp, LPDoubleBufferingFlag flags);
 
 // Swap buffers on the device
-int lp_swap_buffers(LP *lp);
+LIBLAUNCHPAD_DEF int lp_swap_buffers(LP *lp);
 
 // Check if an event occurred, setting [event]
 // If nonblocking was not set in `lp_open`, this function will block
@@ -325,13 +333,13 @@ int lp_swap_buffers(LP *lp);
 // or an LP_ERROR otherwise.
 // If nonblocking was specified in `lp_open`, this function will not
 // block and return 0 if no event happened.
-int lp_check_event(LP *lp, LPEvent *event);
+LIBLAUNCHPAD_DEF int lp_check_event(LP *lp, LPEvent *event);
 
 // Enable flashing, which will repeatedly swap buffers at a default speed
-int lp_enable_flashing(LP *lp);
+LIBLAUNCHPAD_DEF int lp_enable_flashing(LP *lp);
 
 // Disable fleshing, if enabled
-int lp_disable_flashing(LP *lp);
+LIBLAUNCHPAD_DEF int lp_disable_flashing(LP *lp);
   
 //
 // Implementation
@@ -339,7 +347,7 @@ int lp_disable_flashing(LP *lp);
 
 #ifdef LIBLAUNCHPAD_IMPLEMENTATION
 
-int lp_open(LP *lp, char *devicename, bool nonblocking)
+LIBLAUNCHPAD_DEF int lp_open(LP *lp, char *devicename, bool nonblocking)
 {
   if (!lp) return LP_ERROR_LP_NULL;
   int flags = 0;
@@ -350,7 +358,7 @@ int lp_open(LP *lp, char *devicename, bool nonblocking)
   return LP_OK;
 }
 
-int lp_reset(LP *lp)
+LIBLAUNCHPAD_DEF int lp_reset(LP *lp)
 {
   if (!lp) return LP_ERROR_LP_NULL;
   if (!lp->midi_out) return LP_ERROR_UNINITIALIZED;
@@ -363,7 +371,7 @@ int lp_reset(LP *lp)
   return LP_OK;
 }
 
-int lp_close(LP *lp)
+LIBLAUNCHPAD_DEF int lp_close(LP *lp)
 {
   if (!lp) return LP_OK;
   if (lp->midi_in)
@@ -374,7 +382,7 @@ int lp_close(LP *lp)
   return LP_OK;
 }
 
-int lp_set_note(LP *lp, LPNote note)
+LIBLAUNCHPAD_DEF int lp_set_note(LP *lp, LPNote note)
 {
   if (!lp) return LP_ERROR_LP_NULL;
   if (!lp->midi_out) return LP_ERROR_UNINITIALIZED;
@@ -387,7 +395,7 @@ int lp_set_note(LP *lp, LPNote note)
   return LP_OK;
 }
 
-int lp_set_notes(LP *lp, LPNote notes[LP_ROWS * LP_COLS])
+LIBLAUNCHPAD_DEF int lp_set_notes(LP *lp, LPNote notes[LP_ROWS * LP_COLS])
 {
   if (!lp) return LP_ERROR_LP_NULL;
   if (!lp->midi_out) return LP_ERROR_UNINITIALIZED;
@@ -410,7 +418,8 @@ int lp_set_notes(LP *lp, LPNote notes[LP_ROWS * LP_COLS])
   return LP_OK;
 }
 
-int lp_set_double_buffering_flags(LP *lp, LPDoubleBufferingFlag flags)
+LIBLAUNCHPAD_DEF int
+lp_set_double_buffering_flags(LP *lp, LPDoubleBufferingFlag flags)
 {
   if (!lp) return LP_ERROR_LP_NULL;
   if (!lp->midi_out) return LP_ERROR_UNINITIALIZED;
@@ -423,7 +432,7 @@ int lp_set_double_buffering_flags(LP *lp, LPDoubleBufferingFlag flags)
   return LP_OK;
 }
 
-int lp_swap_buffers(LP *lp)
+LIBLAUNCHPAD_DEF int lp_swap_buffers(LP *lp)
 {
   if (!lp) return LP_ERROR_LP_NULL;
   if (!lp->midi_out) return LP_ERROR_UNINITIALIZED;
@@ -444,7 +453,7 @@ int lp_swap_buffers(LP *lp)
   }
 }
   
-int lp_check_event(LP *lp, LPEvent *event)
+LIBLAUNCHPAD_DEF int lp_check_event(LP *lp, LPEvent *event)
 {
   if (!lp) return LP_ERROR_LP_NULL;
   if (!lp->midi_in) return LP_ERROR_UNINITIALIZED;
@@ -490,7 +499,7 @@ int lp_check_event(LP *lp, LPEvent *event)
   return 0;
 }
 
-int lp_enable_flashing(LP *lp)
+LIBLAUNCHPAD_DEF int lp_enable_flashing(LP *lp)
 {
   if (!lp) return LP_ERROR_LP_NULL;
   if (!lp->midi_out) return LP_ERROR_UNINITIALIZED;
@@ -503,7 +512,7 @@ int lp_enable_flashing(LP *lp)
   return LP_OK;
 }
 
-int lp_disable_flashing(LP *lp)
+LIBLAUNCHPAD_DEF int lp_disable_flashing(LP *lp)
 {
   if (!lp) return LP_ERROR_LP_NULL;
   if (!lp->midi_out) return LP_ERROR_UNINITIALIZED;
@@ -522,4 +531,4 @@ int lp_disable_flashing(LP *lp)
 }
 #endif
 
-#endif // _LIBLAUNCHPAD_H_
+#endif // LIBLAUNCHPAD
